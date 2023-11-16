@@ -1,6 +1,7 @@
 import os
 import cv2
 from utils import extract_mask, get_colors
+import argparse
 
 
 def process_images(directory_path, target_labels, class_colors):
@@ -39,11 +40,25 @@ def process_images(directory_path, target_labels, class_colors):
                     txt_file.write(" ".join(map(str, contour_data)) + "\n")
 
 
-# Specify the directory containing your images
-directory_path = ''
-target_labels = ''
+def parser():
+    # Define the command line arguments
+    parser = argparse.ArgumentParser(
+        description='Process images with specified directory, target labels, and class colors.')
+    parser.add_argument('-D', '--directory', type=str, help='Path to the directory containing images')
+    parser.add_argument('-L', '--labels', type=str, help='Target labels directory')
+    parser.add_argument('-C', '--color_list', type=str, help='Color list')
 
-class_colors = get_colors(r'rgb_class.json')
+    # Parse the command line arguments
+    args = parser.parse_args()
 
-# Process images in the specified directory with the read class colors
-process_images(directory_path, target_labels, class_colors)
+    return args
+
+
+def main():
+    args=parser()
+    class_list=get_colors(args.color_list)
+    process_images(args.directory, args.labels,class_list )
+
+
+if __name__ == "__main__":
+    main()
