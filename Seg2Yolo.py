@@ -1,7 +1,6 @@
 import os
-import json
 import cv2
-from utils import extract_mask
+from utils import extract_mask, get_colors
 
 
 def process_images(directory_path, target_labels, class_colors):
@@ -17,7 +16,7 @@ def process_images(directory_path, target_labels, class_colors):
             contours_data = []
 
             # Iterate through each class and create a mask
-            for idx, (class_name,color_code) in enumerate(class_colors.items()):
+            for idx, (class_name, color_code) in enumerate(class_colors.items()):
                 class_mask = extract_mask(image, color_code)
 
                 gray_mask = cv2.cvtColor(class_mask, cv2.COLOR_BGR2GRAY)
@@ -40,14 +39,11 @@ def process_images(directory_path, target_labels, class_colors):
                     txt_file.write(" ".join(map(str, contour_data)) + "\n")
 
 
-
 # Specify the directory containing your images
 directory_path = ''
 target_labels = ''
 
-# Read class colors from JSON file
-with open('audi_sample/rgb_class.json', 'r') as json_file:
-    class_colors = json.load(json_file)
+class_colors = get_colors(r'rgb_class.json')
 
 # Process images in the specified directory with the read class colors
 process_images(directory_path, target_labels, class_colors)
