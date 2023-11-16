@@ -2,11 +2,11 @@ import os
 import cv2
 from utils import extract_mask, get_colors
 import argparse
-
+from tqdm import tqdm
 
 def process_images(directory_path, target_labels, class_colors):
     # Iterate through each image in the specified directory
-    for filename in os.listdir(directory_path):
+    for filename in tqdm(os.listdir(directory_path)):
         if filename.endswith(('.jpg', '.jpeg', '.png')):  # Adjust file extensions as needed
             # Read the image using OpenCV
             image_path = os.path.join(directory_path, filename)
