@@ -38,3 +38,16 @@ def process_images(directory_path, target_labels, class_colors):
             with open(txt_file_path, 'w') as txt_file:
                 for contour_data in contours_data:
                     txt_file.write(" ".join(map(str, contour_data)) + "\n")
+
+
+
+# Specify the directory containing your images
+directory_path = ''
+target_labels = ''
+
+# Read class colors from JSON file
+with open('audi_sample/rgb_class.json', 'r') as json_file:
+    class_colors = json.load(json_file)
+
+# Process images in the specified directory with the read class colors
+process_images(directory_path, target_labels, class_colors)
