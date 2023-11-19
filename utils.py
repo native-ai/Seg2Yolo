@@ -1,5 +1,6 @@
 import numpy as np
 import json
+from PIL import ImageColor
 
 def extract_mask(image, target_color):
     mask = np.zeros_like(image, dtype=int)
@@ -11,3 +12,7 @@ def get_colors(path):
     with open(path, 'r') as json_file:
         class_colors = json.load(json_file)
     return  class_colors
+
+def hex_to_rgb(hex_code):
+    rgb_tuple = ImageColor.getcolor(hex_code, "RGB")
+    return rgb_tuple[::-1]

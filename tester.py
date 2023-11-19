@@ -2,13 +2,7 @@ import cv2
 import os
 import numpy as np
 import json
-from PIL import ImageColor
-
-
-def hex_to_rgb(hex_code):
-    rgb_tuple = ImageColor.getcolor(hex_code, "RGB")
-    return rgb_tuple[::-1]
-
+from utils import hex_to_rgb
 
 def create_image_mask_from_yolo(txt_path, img_shape, class_colors):
     mask = np.zeros(img_shape, dtype=np.uint8)
