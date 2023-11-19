@@ -1,8 +1,8 @@
 import cv2
 import os
 import numpy as np
-import json
-from utils import hex_to_rgb
+from utils import hex_to_rgb,get_colors
+import argparse
 
 def create_image_mask_from_yolo(txt_path, img_shape, class_colors):
     mask = np.zeros(img_shape, dtype=np.uint8)
@@ -29,13 +29,13 @@ def create_image_mask_from_yolo(txt_path, img_shape, class_colors):
     return mask
 
 
-def process_images(directory_path, class_colors):
-    for filename in os.listdir(directory_path):
+def process_images(original_labels,converted_labels, class_colors):
+    for filename in os.listdir(original_labels):
         if filename.endswith('.txt'):
             # Read the corresponding image
             img_filename = os.path.splitext(filename)[0] + '.png'
             img_path = os.path.join(
-                '/20181107_132300/label/cam_front_center',
+                converted_labels,
                 img_filename)
             image = cv2.imread(img_path)
 
@@ -43,7 +43,7 @@ def process_images(directory_path, class_colors):
             img_shape = image.shape
 
             # Create mask
-            txt_path = os.path.join(directory_path, filename)
+            txt_path = os.path.join(original_labels, filename)
             mask = create_image_mask_from_yolo(txt_path, img_shape, class_colors)
 
             # Show the original image
@@ -54,15 +54,28 @@ def process_images(directory_path, class_colors):
             cv2.waitKey(0)
 
 
-# Specify the directory containing your YOLO-style text files
-directory_path = '/20181107_132300/txt_labels/'
+def parser():
+    # Define the command line arguments
+    parser = argparse.ArgumentParser(
+        description='Process images with specified directory, target labels, and class colors.')
+    parser.add_argument('-O', '--original_labels', type=str, help='Path to the directory containing images')
+    parser.add_argument('-L', '--converted_labels', type=str, help='Target labels directory')
+    parser.add_argument('-C', '--color_list', type=str, help='Color list.(hex_class.json)')
 
-# Read class colors from JSON file
-with open('samples/hex_class.json', 'r') as json_file:
-    class_colors = json.load(json_file)
+    # Parse the command line arguments
+    args = parser.parse_args()
 
-# Process YOLO-style text files and display image masks
-process_images(directory_path, class_colors)
+    return args
 
-# Close OpenCV windows
-cv2.destroyAllWindows()
+def main():
+    args=parser()
+    # Read class colors from JSON file
+    class_list=get_colors(args.color_list)
+    # Process YOLO-style text files and display image masks
+    process_images(args.original_labels, args.converted_labels, class_list)
+    # Close OpenCV windows
+    cv2.destroyAllWindows()
+
+
+if __name__ == "__main__":
+    main()
