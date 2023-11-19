@@ -44,8 +44,8 @@ def parser():
     # Define the command line arguments
     parser = argparse.ArgumentParser(
         description='Process images with specified directory, target labels, and class colors.')
-    parser.add_argument('-D', '--directory', type=str, help='Path to the directory containing images')
-    parser.add_argument('-L', '--labels', type=str, help='Target labels directory')
+    parser.add_argument('-I', '--input_path', type=str, help='Path to the directory containing images')
+    parser.add_argument('-O', '--output_path', type=str, help='Target labels directory')
     parser.add_argument('-C', '--color_list', type=str, help='Color list')
 
     # Parse the command line arguments
